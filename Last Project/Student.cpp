@@ -5,7 +5,7 @@ using namespace std;
 #include<string>
 #include"globalFiles.h"
 #include<fstream>
-
+#include<algorithm>
 Student::Student()
 {
 
@@ -71,6 +71,8 @@ void Student::operMenu()
 
 void Student::initOrderVector()
 {
+	//clear the vector first
+	infoVec.clear();
 	//this function should be called everytime when a new student logs in
 	//read info from order.txt file
 	ifstream ifs(ORDER_FILE, ios::in);
@@ -118,7 +120,7 @@ void Student::applyForOrder()
 	vector<string> sizesVec{ "Small","Middle","Large" };
 
 	//combine all information into one string and save it into a vector
-	string infoString = this->m_ID+' ' + daysVec[day - 1] + ' ' + morningsVec[morning - 1]+' '+ sizesVec[size - 1];
+	string infoString = this->m_ID+' '+this->m_Name+' '+ daysVec[day - 1] + ' ' + morningsVec[morning - 1] + ' ' + sizesVec[size - 1];
 
 	infoVec.push_back(infoString);
 
@@ -133,6 +135,18 @@ void Student::applyForOrder()
 }
 void Student::showMyOrder()
 {
+	//loop through vecInfo
+	for  (const auto&c: infoVec)
+	{
+		//truncate the first part
+		auto it = c.find(' ', 0);
+		//crop the first word, namely the id from the whole string
+		auto id = c.substr(0, it);
+		if (id == this->m_ID)
+		{
+			cout << c << endl;
+		}
+	}
 	system("pause");
 }
 void Student::cancelMyOrder()
