@@ -3,6 +3,8 @@
 #include<vector>
 #include<fstream>
 #include"globalFiles.h"
+#include<algorithm>
+
 using namespace std;
 Admin::Admin()
 {
@@ -85,53 +87,23 @@ void Admin::addAccount()
 }
 void Admin::showAccount()
 {
-	ifstream ifsStudent;
-	ifstream ifsTeacher;
-	ifstream ifsAdmin;
-
-	ifsStudent.open(STUDENT_FILE, ios::in);
-	if (!ifsStudent.is_open())
+	//just load the information by looping through stuVector,teachVector
+	cout << "Student Infos:" << endl;
+	for (const auto&c: studentVec )
 	{
-		cout << "Student file not found!" << endl;
-		ifsStudent.close();
+		cout << "ID: " << c.m_ID << "\tName: " << c.m_Name << "\tPassword: " << c.m_Pwd << endl;
 	}
 
-	ifsTeacher.open(TEACHER_FILE, ios::in);
-	if (!ifsTeacher.is_open())
+	cout << "Teacher Infos:" << endl;
+	for (const auto& c : teacherVec)
 	{
-		cout << "Teacher file not found!" << endl;
-		ifsTeacher.close();
+		cout << "ID: " << c.m_ID << "\tName: " << c.m_Name << "\tPassword: " << c.m_Pwd << endl;
 	}
-	ifsAdmin.open(ADMIN_FILE, ios::in);
-	if (!ifsAdmin.is_open())
+	cout << "Admin Infos:" << endl;
+	for (const auto& c : adminVec)
 	{
-		cout << "Admin file not found!" << endl;
-		ifsAdmin.close();
+		cout << "\tName: " << c.m_Name << "\tPassword: " << c.m_Pwd << endl;
 	}
-
-
-	string id, name, password;
-	cout << "Students Information:" << endl;
-	while (ifsStudent>>id>>name>>password)
-	{
-		cout << "ID: " << id << "\tName: " << name << "\tPassword: " << password << endl;
-	}
-
-	cout << "Teachers Information:" << endl;
-	while (ifsTeacher >> id >> name >> password)
-	{
-		cout << "ID: " << id << "\tName: " << name << "\tPassword: " << password << endl;
-	}
-	
-	cout << "Admins Information:" << endl;
-	while (ifsAdmin >> id >> name >> password)
-	{
-		cout << "ID: " << id << "\tName: " << name << "\tPassword: " << password << endl;
-	}
-	ifsStudent.close();
-	ifsTeacher.close();
-	ifsAdmin.close();
-	
 	system("pause");
 }
 void Admin::showLab()
@@ -199,6 +171,24 @@ void Admin::operMenu()
 	
 }
 
+class GreaterStudent
+{
+public:
+	bool operator()(const Student& lhs, const Student& rhs)
+	{
+		return lhs.m_ID < rhs.m_ID;
+	}
+};
+
+class GreaterTeacher
+{
+public:
+	bool operator()(const Teacher& lhs, const Teacher& rhs)
+	{
+		return lhs.m_ID < rhs.m_ID;
+	}
+};
+
 void Admin::initVector()
 {
 	//read info from txt file
@@ -239,7 +229,9 @@ void Admin::initVector()
 		cout << adminCnt << " Admins information registered!" << endl;
 
 		//sort the vector according to their ID, so that it looks better when shows INFO
-	
+		sort(studentVec.begin(), studentVec.end(), GreaterStudent());
+		sort(teacherVec.begin(), teacherVec.end(), GreaterTeacher());
+
 	}
 	else
 	{
