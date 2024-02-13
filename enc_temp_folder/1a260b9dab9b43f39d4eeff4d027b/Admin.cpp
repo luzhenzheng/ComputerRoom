@@ -237,8 +237,6 @@ void Admin::initVector()
 		cout << studentCnt << " Students information registered!" << endl;
 		cout << teacherCnt << " Teachers information registered!" << endl;
 		cout << adminCnt << " Admins information registered!" << endl;
-
-		//sort the vector according to their ID, so that it looks better when shows INFO
 	
 	}
 	else

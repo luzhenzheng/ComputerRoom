@@ -16,6 +16,8 @@ public:
 	void showAccount();
 	void showLab();
 	void clearAllOrders();
+	//check repeat
+	bool checkRepeat(string id,int type);
 
 	//read info from txt files and write it into vector
 	void initVector();
