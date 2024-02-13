@@ -106,6 +106,7 @@ void Admin::showAccount()
 	}
 	system("pause");
 }
+
 void Admin::showLab()
 {
 	//just loop through map and display here
@@ -115,9 +116,10 @@ void Admin::showLab()
 	}
 	system("pause");
 }
+
 void Admin::clearAllOrders()
 {
-	ofstream ofsOrder (ORDER_FILE, std::ofstream::out | std::ofstream::trunc);
+	ofstream ofsOrder (ORDER_FILE, std::ofstream::trunc);
 	ofsOrder.close();
 	cout << "all order cleared!" << endl;
 	system("pause");
@@ -269,7 +271,7 @@ bool Admin::checkRepeat(string id, int type)
 		}
 		return false;
 	}
-	else if (type ==2 )
+	else
 	{
 		for (auto it = teacherVec.begin(); it < teacherVec.end(); it++)
 		{

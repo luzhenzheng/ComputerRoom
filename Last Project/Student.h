@@ -1,5 +1,7 @@
 #pragma once
 #include"Identity.h"
+#include<vector>
+#include<string>
 class Student:public Identity
 {
 public:
@@ -12,5 +14,6 @@ public:
 	void showAllOrders();
 	void cancelMyOrder();
 	void quit();
+	void initOrderVector();
+	vector<string> infoVec;//this vector stores all information 
 };
-

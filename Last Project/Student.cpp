@@ -1,6 +1,10 @@
 #include "Student.h"
 #include<iostream>
 using namespace std;
+#include<vector>
+#include<string>
+#include"globalFiles.h"
+#include<fstream>
 
 Student::Student()
 {
@@ -16,6 +20,7 @@ void Student::operMenu()
 {
 	while (true)
 	{
+		this->initOrderVector();
 		//clear the screen first
 		system("cls");
 		cout << "welcome£º" << this->m_Name << "login£¡" << endl;
@@ -63,6 +68,32 @@ void Student::operMenu()
 	
 
 }
+
+void Student::initOrderVector()
+{
+	//this function should be called everytime when a new student logs in
+	//read info from order.txt file
+	ifstream ifs(ORDER_FILE, ios::in);
+	if (!ifs.is_open())
+	{
+		cout << "file not found!" << endl;
+	}
+	else
+	{
+		string infoString;
+		int cnt = 0;
+		//dont use ifs>>infoString to read, because it will read all separate words
+		//use getline instead
+		while (getline(ifs,infoString))
+		{
+			infoVec.push_back(infoString);
+			++cnt;
+		}
+		cout << cnt << " orders detected!" << endl;
+	}
+}
+
+
 void Student::applyForOrder()
 {
 	//write the string information into the order.txt file 
@@ -77,7 +108,26 @@ void Student::applyForOrder()
 	cin >> morning;
 
 	cout << "Small/Middle/Large?" << endl;
-	cout << "1.Small\t2.Middle" << endl;
+	cout << "1.\tSmall" << endl << "2.\tMiddle" << endl<< "3.\tLarge" << endl;
+
+	int size = 1;
+	cin >> size;
+
+	vector<string> daysVec{ "Monday","Tuesday","Wednesday","Thursday","Freiday" };
+	vector<string> morningsVec{ "Morning","Afternoon" };
+	vector<string> sizesVec{ "Small","Middle","Large" };
+
+	//combine all information into one string and save it into a vector
+	string infoString = this->m_ID+' ' + daysVec[day - 1] + ' ' + morningsVec[morning - 1]+' '+ sizesVec[size - 1];
+
+	infoVec.push_back(infoString);
+
+	//write it into order.txt file
+	ofstream ofs(ORDER_FILE, ios::out|ios::app);
+
+	ofs << infoString << endl;
+
+	ofs.close();
 	
 	system("pause");
 }
@@ -96,5 +146,9 @@ void Student::quit()
 
 void Student::showAllOrders()
 {
+	for (const auto&c:infoVec)
+	{
+		cout << c << endl;
+	}
 	system("pause");
 }
