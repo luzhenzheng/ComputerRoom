@@ -53,6 +53,7 @@ void ReserveSystem::login(int type)
 	//check whether it is registered in the txt files, rather than check the vectors
 	if (type == 1 )
 	{
+		//student
 		ifs.open(STUDENT_FILE, ios::in);
 		if (!ifs.is_open())
 		{
@@ -78,6 +79,7 @@ void ReserveSystem::login(int type)
 	}
 	else if (type ==2)
 	{
+		//teacher
 		ifs.open(TEACHER_FILE, ios::in);
 		if (!ifs.is_open())
 		{
@@ -104,6 +106,7 @@ void ReserveSystem::login(int type)
 	}
 	else
 	{
+		//admin
 		ifs.open(ADMIN_FILE, ios::in);
 		if (!ifs.is_open())
 		{

@@ -65,20 +65,6 @@ void Student::operMenu()
 }
 void Student::applyForOrder()
 {
-	//write the string information into the order.txt file 
-	int day;
-	cout << "On which day do you want to order?" << endl;
-	cout << "1.Monday\t2.Tuesday\t3.Wednesday\t4.Thursday,\t5.Friday" << endl;
-	cin >> day;
-
-	cout << "Morning or Afternoo?" << endl;
-	cout << "1.Morning\t2.Afternoon" << endl;
-	int morning;
-	cin >> morning;
-
-	cout << "Small/Middle/Large?" << endl;
-	cout << "1.Small\t2.Middle" << endl;
-	
 	system("pause");
 }
 void Student::showMyOrder()

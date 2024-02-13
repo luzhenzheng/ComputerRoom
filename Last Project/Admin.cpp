@@ -3,6 +3,8 @@
 #include<vector>
 #include<fstream>
 #include"globalFiles.h"
+#include<algorithm>
+
 using namespace std;
 Admin::Admin()
 {
@@ -23,10 +25,10 @@ void Admin::addAccount()
 	cout << "1. Student\t" << endl;
 	cout << "2. Teacher\t" << endl;
 
-	int choice;
-	cin >> choice;
-	if (choice == 1)
-	{
+	int type;
+	cin >> type;
+	if (type == 1)
+	{//student
 		ofs.open(STUDENT_FILE, ios::out | ios::app);
 		if (!ofs.is_open())
 		{
@@ -34,8 +36,8 @@ void Admin::addAccount()
 			return;
 		}
 	}
-	else if (choice == 2)
-	{
+	else if (type == 2)
+	{//teacher
 		ofs.open(TEACHER_FILE, ios::out | ios::app);
 		if (!ofs.is_open())
 		{
@@ -45,15 +47,33 @@ void Admin::addAccount()
 	}
 
 	string id, name, password;
-	cout << "Please enter id of the person:" << endl;
-	cin >> id;
+	while (true)
+	{
+		//check repeat first 
+
+		cout << "Please enter id of the person:" << endl;
+		cin >> id;
+		if (!checkRepeat(id,type))
+		{
+
+			break;
+		}
+		else
+		{
+			cout << "ID is repeated!" << endl;
+		}
+
+	}
+
 	cout << "Please enter name for the person" << endl;
 	cin >> name;
 	cout << "Please enter password for the person:" << endl;
 	cin >> password;
 
+	
+
 	//write id, name ,password into student.txt and teacher.txt file
-	if (choice ==1)
+	if (type ==1)
 	{
 		ofs << id << " " << name << " " << password << endl;
 		cout << "enter information of " << name << " complete!" << endl;
@@ -67,66 +87,51 @@ void Admin::addAccount()
 }
 void Admin::showAccount()
 {
-	ifstream ifs;
-	cout << "Please enter what person you want to show?" << endl;
-	cout << "1. Student\t" << endl;
-	cout << "2. Teacher\t" << endl;
-
-	int choice;
-	cin >> choice;
-
-	if (choice==1)
+	//just load the information by looping through stuVector,teachVector
+	cout << "Student Infos:" << endl;
+	for (const auto&c: studentVec )
 	{
-		ifs.open(STUDENT_FILE, ios::in);
-		if (!ifs.is_open())
-		{
-			cout << "file not found!" << endl;
-			return;
-		}
-		else
-		{
-			string id, name, password;
-			while (ifs >> id >> name >> password)
-			{
-				cout << "ID: " << id << "name: " << name << " password: " << password << endl;
-			}
-		}
-	}
-	else
-	{
-		ifs.open(TEACHER_FILE, ios::in);
-		if (!ifs.is_open())
-		{
-			cout << "file not found!" << endl;
-			return;
-		}
-		else
-		{
-			string id, name, password;
-			while (ifs >> id >> name >> password)
-			{
-				cout << "ID: " << id << "name: " << name << " password: " << password << endl;
-			}
-		}
+		cout << "ID: " << c.m_ID << "\tName: " << c.m_Name << "\tPassword: " << c.m_Pwd << endl;
 	}
 
+	cout << "Teacher Infos:" << endl;
+	for (const auto& c : teacherVec)
+	{
+		cout << "ID: " << c.m_ID << "\tName: " << c.m_Name << "\tPassword: " << c.m_Pwd << endl;
+	}
+	cout << "Admin Infos:" << endl;
+	for (const auto& c : adminVec)
+	{
+		cout << "\tName: " << c.m_Name << "\tPassword: " << c.m_Pwd << endl;
+	}
 	system("pause");
 }
 void Admin::showLab()
 {
-
+	//just loop through map and display here
+	for (const auto& c : PCRoomMap)
+	{
+		cout << "ID: " << c.first << "\tCapacity:" << c.second << endl;
+	}
+	system("pause");
 }
 void Admin::clearAllOrders()
 {
-
+	ofstream ofsOrder (ORDER_FILE, std::ofstream::out | std::ofstream::trunc);
+	ofsOrder.close();
+	cout << "all order cleared!" << endl;
+	system("pause");
 }
 
 void Admin::operMenu()
 {
 	while (true)
 	{
-		//clear the screen first
 		system("cls");
+		//read information and write it into vectors everytime when admin logs in
+		this->initVector();
+		//clear the screen first
+		
 		cout << "welcome:" << this->m_Name << " login£¡" << endl;
 		cout << "\t\t ----------------------------------\n";
 		cout << "\t\t|                                 |\n";
@@ -174,30 +179,105 @@ void Admin::operMenu()
 	
 }
 
+class GreaterStudent
+{
+public:
+	bool operator()(const Student& lhs, const Student& rhs)
+	{
+		return lhs.m_ID < rhs.m_ID;
+	}
+};
+
+class GreaterTeacher
+{
+public:
+	bool operator()(const Teacher& lhs, const Teacher& rhs)
+	{
+		return lhs.m_ID < rhs.m_ID;
+	}
+};
+
 void Admin::initVector()
 {
 	//read info from txt file
 	ifstream ifsStudent(STUDENT_FILE, ios::in);
 	ifstream ifsTeacher(TEACHER_FILE, ios::in);
 	ifstream ifsAdmin(ADMIN_FILE, ios::in);
+	ifstream ifsComputerRoom(PCROOM_FILE, ios::in);
 
-	if (ifsStudent.is_open()&&ifsAdmin.is_open()&&ifsTeacher.is_open())
+	if (ifsStudent.is_open()&&ifsAdmin.is_open()&&ifsTeacher.is_open()&&ifsComputerRoom.is_open())
 	{
-		string id, name, password;
-		while (ifsStudent>>id>>name>>password)
+		string studentId, studentName, studentPassword;
+		int studentCnt = 0;
+		while (ifsStudent>> studentId >> studentName >> studentPassword)
 		{
-			this->studentVec.push_back(Student(id, name, password));
+			this->studentVec.push_back(Student(studentId, studentName, studentPassword));
+			++studentCnt;
+		}
+		int teacherCnt = 0;
+		string teacherId, teacherName, teacherPassword;
+		while (ifsTeacher >> teacherId >> teacherName >> teacherPassword)
+		{
+			this->teacherVec.push_back(Teacher(teacherId, teacherName, teacherPassword));
+			teacherCnt++;
+		}
+		int adminCnt = 0;
+		string adminId, adminName, adminPassword;
+		while (ifsAdmin >> adminId >> adminName >> adminPassword)
+		{
+			this->adminVec.push_back(Admin(teacherName, teacherPassword));
+			++adminCnt;
+		}
+		
+		string roomId, roomCapcity;
+		while (ifsComputerRoom>>roomId>>roomCapcity)
+		{
+			this->PCRoomMap.insert(make_pair(roomId,roomCapcity));
 		}
 
-		string id, name, password;
-		while (ifsStudent >> id >> name >> password)
-		{
-			this->studentVec.push_back(Student(id, name, password));
-		}
+		ifsAdmin.close();
+		ifsTeacher.close();
+		ifsStudent.close();
+		ifsComputerRoom.close();
+	
+		cout << studentCnt << " Students information registered!" << endl;
+		cout << teacherCnt << " Teachers information registered!" << endl;
+		cout << adminCnt << " Admins information registered!" << endl;
+
+		//sort the vector according to their ID, so that it looks better when shows INFO
+		sort(studentVec.begin(), studentVec.end(), GreaterStudent());
+		sort(teacherVec.begin(), teacherVec.end(), GreaterTeacher());
+
 	}
 	else
 	{
 		cout << "files not found!" << endl;
 		return;
+	}
+}
+
+bool Admin::checkRepeat(string id, int type)
+{
+	if (type == 1)
+	{
+		for (auto it = studentVec.begin(); it < studentVec.end(); it++)
+		{
+			if (it->m_ID==id)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	else if (type ==2 )
+	{
+		for (auto it = teacherVec.begin(); it < teacherVec.end(); it++)
+		{
+			if (it->m_ID == id)
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 }

@@ -4,6 +4,7 @@
 #include"Student.h"
 #include"Teacher.h"
 #include<vector>
+#include<map>
 
 using namespace std;
 class Admin:public Identity
@@ -16,6 +17,8 @@ public:
 	void showAccount();
 	void showLab();
 	void clearAllOrders();
+	//check repeat
+	bool checkRepeat(string id,int type);
 
 	//read info from txt files and write it into vector
 	void initVector();
@@ -23,5 +26,6 @@ public:
 	vector<Student> studentVec;
 	vector<Teacher> teacherVec;
 	vector<Admin> adminVec;
+	map<string, string> PCRoomMap;
 };
 
