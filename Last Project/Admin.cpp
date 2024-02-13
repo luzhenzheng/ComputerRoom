@@ -108,11 +108,19 @@ void Admin::showAccount()
 }
 void Admin::showLab()
 {
-
+	//just loop through map and display here
+	for (const auto& c : PCRoomMap)
+	{
+		cout << "ID: " << c.first << "\tCapacity:" << c.second << endl;
+	}
+	system("pause");
 }
 void Admin::clearAllOrders()
 {
-
+	ofstream ofsOrder (ORDER_FILE, std::ofstream::out | std::ofstream::trunc);
+	ofsOrder.close();
+	cout << "all order cleared!" << endl;
+	system("pause");
 }
 
 void Admin::operMenu()
@@ -195,8 +203,9 @@ void Admin::initVector()
 	ifstream ifsStudent(STUDENT_FILE, ios::in);
 	ifstream ifsTeacher(TEACHER_FILE, ios::in);
 	ifstream ifsAdmin(ADMIN_FILE, ios::in);
+	ifstream ifsComputerRoom(PCROOM_FILE, ios::in);
 
-	if (ifsStudent.is_open()&&ifsAdmin.is_open()&&ifsTeacher.is_open())
+	if (ifsStudent.is_open()&&ifsAdmin.is_open()&&ifsTeacher.is_open()&&ifsComputerRoom.is_open())
 	{
 		string studentId, studentName, studentPassword;
 		int studentCnt = 0;
@@ -219,10 +228,17 @@ void Admin::initVector()
 			this->adminVec.push_back(Admin(teacherName, teacherPassword));
 			++adminCnt;
 		}
+		
+		string roomId, roomCapcity;
+		while (ifsComputerRoom>>roomId>>roomCapcity)
+		{
+			this->PCRoomMap.insert(make_pair(roomId,roomCapcity));
+		}
 
 		ifsAdmin.close();
 		ifsTeacher.close();
 		ifsStudent.close();
+		ifsComputerRoom.close();
 	
 		cout << studentCnt << " Students information registered!" << endl;
 		cout << teacherCnt << " Teachers information registered!" << endl;

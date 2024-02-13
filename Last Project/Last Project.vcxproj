@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Admin.cpp" />
+    <ClCompile Include="ComputerRoom.cpp" />
     <ClCompile Include="Identity.cpp" />
     <ClCompile Include="Last Project.cpp" />
     <ClCompile Include="ReserverSystem.cpp" />
@@ -136,6 +137,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Admin.h" />
+    <ClInclude Include="ComputerRoom.h" />
     <ClInclude Include="globalFiles.h" />
     <ClInclude Include="Identity.h" />
     <ClInclude Include="ReserverSystem.h" />

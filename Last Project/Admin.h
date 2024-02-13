@@ -4,6 +4,7 @@
 #include"Student.h"
 #include"Teacher.h"
 #include<vector>
+#include<map>
 
 using namespace std;
 class Admin:public Identity
@@ -25,5 +26,6 @@ public:
 	vector<Student> studentVec;
 	vector<Teacher> teacherVec;
 	vector<Admin> adminVec;
+	map<string, string> PCRoomMap;
 };
 
