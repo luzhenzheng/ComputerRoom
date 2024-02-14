@@ -65,7 +65,7 @@ void Student::operMenu()
 			break;
 		}
 	}
-	
+
 
 }
 
@@ -86,7 +86,7 @@ void Student::initOrderVector()
 		int cnt = 0;
 		//dont use ifs>>infoString to read, because it will read all separate words
 		//use getline instead
-		while (getline(ifs,infoString))
+		while (getline(ifs, infoString))
 		{
 			infoVec.push_back(infoString);
 			++cnt;
@@ -110,7 +110,7 @@ void Student::applyForOrder()
 	cin >> morning;
 
 	cout << "Small/Middle/Large?" << endl;
-	cout << "1.\tSmall" << endl << "2.\tMiddle" << endl<< "3.\tLarge" << endl;
+	cout << "1.\tSmall" << endl << "2.\tMiddle" << endl << "3.\tLarge" << endl;
 
 	int size = 1;
 	cin >> size;
@@ -120,37 +120,65 @@ void Student::applyForOrder()
 	vector<string> sizesVec{ "Small","Middle","Large" };
 
 	//combine all information into one string and save it into a vector
-	string infoString = this->m_ID+' '+this->m_Name+' '+ daysVec[day - 1] + ' ' + morningsVec[morning - 1] + ' ' + sizesVec[size - 1];
+	string infoString = "ID: " + this->m_ID + " Name:" + this->m_Name + " Day: " + daysVec[day - 1] + " Quarter: " + morningsVec[morning - 1] + " Size: " + sizesVec[size - 1];
 
+	//add an application state;
+	infoString += " Status: review";
 	infoVec.push_back(infoString);
 
 	//write it into order.txt file
-	ofstream ofs(ORDER_FILE, ios::out|ios::app);
+	ofstream ofs(ORDER_FILE, ios::out | ios::app);
 
 	ofs << infoString << endl;
 
 	ofs.close();
-	
+
 	system("pause");
 }
 void Student::showMyOrder()
 {
 	//loop through vecInfo
-	for  (const auto&c: infoVec)
+	for (const auto& c : infoVec)
 	{
 		//truncate the first part
-		auto it = c.find(' ', 0);
+		auto idx_ID = c.find("ID:", 0);
 		//crop the first word, namely the id from the whole string
-		auto id = c.substr(0, it);
-		if (id == this->m_ID)
-		{
-			cout << c << endl;
-		}
+		auto idx_Name = c.find("Name:", 0);
+		auto id_string = c.substr(idx_ID + string("ID:").size(), idx_Name - string("ID:").size());
+		//trim the string by deleting the spaces in the front and at the end
+		[&id_string]() {
+			id_string.erase(0, id_string.find_first_not_of(" "));
+			id_string.erase(id_string.find_last_not_of(" ") + 1);}();
+			if (id_string == this->m_ID)
+			{
+				//my orders mean: id == this->m_ID
+				cout << c << endl;
+			}
 	}
 	system("pause");
 }
 void Student::cancelMyOrder()
 {
+	//turn the last word(state) of the infoString into "canclled" 
+		//loop through vecInfo
+	for (const auto& c : infoVec)
+	{
+		//truncate the first part
+		auto idx_ID = c.find("ID:", 0);
+		//crop the first word, namely the id from the whole string
+		auto idx_Name = c.find("Name:", 0);
+		auto id_string = c.substr(idx_ID + string("ID:").size(), idx_Name - string("ID:").size());
+		//trim the string by deleting the spaces in the front and at the end
+
+		auto trim = [](string& s) {s.erase(0, s.find_first_not_of(" "));
+		s.erase(s.find_last_not_of(" ") + 1);};
+		trim(id_string);
+		if (id_string == this->m_ID)
+		{
+			//my orders mean: id == this->m_ID
+			cout << c << endl;
+		}
+	}
 	system("pause");
 }
 void Student::quit()
@@ -160,7 +188,7 @@ void Student::quit()
 
 void Student::showAllOrders()
 {
-	for (const auto&c:infoVec)
+	for (const auto& c : infoVec)
 	{
 		cout << c << endl;
 	}
