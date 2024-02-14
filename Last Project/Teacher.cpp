@@ -30,9 +30,6 @@ void Teacher::approve()
 	{
 		auto idx_Status = c.rfind("Status:");
 		auto status_string = c.substr(idx_Status + string("Status: ").size(), c.size());
-		//++cnt;
-		//cout << cnt << ".\t" << c << endl;
-
 		if (status_string == "review")
 		{
 			++cnt;
@@ -40,41 +37,45 @@ void Teacher::approve()
 		}
 	}
 
-
 	int choice;
 	cout << "which order do you want to review?" << endl;
 	cin >> choice;
-	int cnt = 0;
+	cnt = 0;
 	for (auto& c : infoVec)
 	{
-		++cnt;
-		auto idx_Status = c.rfind("Status: ");
-		if (cnt == choice)
-		{
-			cout << "approve or deny?" << endl;
-			cout << "1.\tapprove" << endl;
-			cout << "2.\tdeny" << endl;
-			int decision;
-			cin >> decision;
-			while (true)
-			{
-				if (decision == 1 || decision == 2)
-				{
-					break;
-				}
-				cout << "please enter again:" << endl;
-			}
-			if (decision == 1)
-			{
-				c.replace(idx_Status + string("Status: ").size(), c.size(), "approved");
-				cout << cnt << ".\t" << c << endl;
-			}
-			else
-			{
-				c.replace(idx_Status + string("Status: ").size(), c.size(), "deny");
-				cout << cnt << ".\t" << c << endl;
-			}
 
+		auto idx_Status = c.rfind("Status:");
+		auto status_string = c.substr(idx_Status + string("Status: ").size(), c.size());
+
+		if (status_string == "review")
+		{
+			++cnt;
+			if (cnt == choice)
+			{
+				cout << "approve or deny?" << endl;
+				cout << "1.\tapprove" << endl;
+				cout << "2.\tdeny" << endl;
+				int decision;
+				cin >> decision;
+				while (true)
+				{
+					if (decision == 1 || decision == 2)
+					{
+						break;
+					}
+					cout << "please enter again:" << endl;
+				}
+				if (decision == 1)
+				{
+					c.replace(idx_Status + string("Status: ").size(), c.size(), "approved");
+					cout << "Order approved!" << endl;
+				}
+				else
+				{
+					c.replace(idx_Status + string("Status: ").size(), c.size(), "deny");
+					cout << "Order denied!" << endl;
+				}
+			}
 		}
 	}
 
@@ -153,10 +154,14 @@ void Teacher::initOrderVector()
 		int cnt = 0;
 		//dont use ifs>>infoString to read, because it will read all separate words
 		//use getline instead
-		while (getline(ifs, infoString))
+		while (getline(ifs, infoString) && !infoString.empty())//to deadl with bug of reading empty line
 		{
+
 			infoVec.push_back(infoString);
 			++cnt;
+
+
+
 		}
 		cout << cnt << " orders detected!" << endl;
 	}

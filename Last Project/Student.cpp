@@ -105,18 +105,45 @@ void Student::applyForOrder()
 	int day;
 	cout << "On which day do you want to order?" << endl;
 	cout << "1.Monday\t2.Tuesday\t3.Wednesday\t4.Thursday,\t5.Friday" << endl;
-	cin >> day;
+	while (true)
+	{
+		cin >> day;
+		if (day==1||day==2||day==3||day==4||day==5)
+		{
+			break;
+		}
+		cout << "please reenter:" << endl;
+	}
+
 
 	cout << "Morning or Afternoo?" << endl;
 	cout << "1.Morning\t2.Afternoon" << endl;
 	int morning;
-	cin >> morning;
+	
+
+	while (true)
+	{
+		cin >> morning;
+		if (morning ==1||morning==2)
+		{
+			break;
+		}
+		cout << "please reenter:" << endl;
+	}
 
 	cout << "Small/Middle/Large?" << endl;
 	cout << "1.\tSmall" << endl << "2.\tMiddle" << endl << "3.\tLarge" << endl;
 
-	int size = 1;
-	cin >> size;
+	int size;
+	while (true)
+	{
+		cin >> size;
+		if (size == 1 || size == 2||size==3)
+		{
+			break;
+		}
+		cout << "please reenter:" << endl;
+	}
 
 	vector<string> daysVec{ "Monday","Tuesday","Wednesday","Thursday","Freiday" };
 	vector<string> morningsVec{ "Morning","Afternoon" };
