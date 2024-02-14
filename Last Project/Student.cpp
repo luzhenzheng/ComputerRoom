@@ -48,9 +48,11 @@ void Student::operMenu()
 			break;
 		case 2:
 			showMyOrder();
+
 			break;
 		case 3:
 			showAllOrders();
+
 			break;
 		case 4:
 			cancelMyOrder();
@@ -64,8 +66,8 @@ void Student::operMenu()
 			cout << "log out success!" << endl;
 			break;
 		}
+		system("pause");
 	}
-
 
 }
 
@@ -93,6 +95,7 @@ void Student::initOrderVector()
 		}
 		cout << cnt << " orders detected!" << endl;
 	}
+	ifs.close();
 }
 
 
@@ -133,11 +136,11 @@ void Student::applyForOrder()
 
 	ofs.close();
 
-	system("pause");
 }
 void Student::showMyOrder()
 {
 	//loop through vecInfo
+	int cnt = 0;
 	for (const auto& c : infoVec)
 	{
 		//truncate the first part
@@ -149,19 +152,31 @@ void Student::showMyOrder()
 		[&id_string]() {
 			id_string.erase(0, id_string.find_first_not_of(" "));
 			id_string.erase(id_string.find_last_not_of(" ") + 1);}();
+			
 			if (id_string == this->m_ID)
 			{
+				++cnt;
 				//my orders mean: id == this->m_ID
-				cout << c << endl;
+				cout <<cnt<<".\t"<< c << endl;
 			}
 	}
-	system("pause");
+
 }
 void Student::cancelMyOrder()
 {
+	//show myOrder first();
+	this->showMyOrder();
+
+	cout << "Which order do you want to cancel?" << endl;
+	int choice;
+	cin >> choice;
+
 	//turn the last word(state) of the infoString into "canclled" 
-		//loop through vecInfo
-	for (const auto& c : infoVec)
+	//loop through vecInfo
+	
+
+	int cnt = 0;
+	for (auto& c : infoVec)
 	{
 		//truncate the first part
 		auto idx_ID = c.find("ID:", 0);
@@ -173,24 +188,37 @@ void Student::cancelMyOrder()
 		auto trim = [](string& s) {s.erase(0, s.find_first_not_of(" "));
 		s.erase(s.find_last_not_of(" ") + 1);};
 		trim(id_string);
+
 		if (id_string == this->m_ID)
 		{
-			//my orders mean: id == this->m_ID
-			cout << c << endl;
+			++cnt;
+			if (cnt==choice)
+			{
+				//my orders mean: id == this->m_ID
+				auto idx_Status = c.rfind("Status: ");
+				//replace the part behind Status: with Cancelled
+				c.replace(idx_Status + string("Status: ").size(), c.size(), "Cancelled");
+				cout << c << endl;
+			}
 		}
 	}
-	system("pause");
-}
-void Student::quit()
-{
 
+	//write the changed infoVec back into .txt file
+	ofstream ofs(ORDER_FILE, ios::out || ios::trunc);
+	for (const auto& c : infoVec)
+	{
+		ofs << c << endl;
+	}
+	ofs.close();
 }
 
 void Student::showAllOrders()
 {
+	int cnt = 0;
 	for (const auto& c : infoVec)
 	{
-		cout << c << endl;
+		++cnt;
+		cout <<cnt<<".\t"<< c << endl;
 	}
-	system("pause");
+
 }

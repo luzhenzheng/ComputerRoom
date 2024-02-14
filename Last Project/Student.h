@@ -13,7 +13,6 @@ public:
 	void showMyOrder();
 	void showAllOrders();
 	void cancelMyOrder();
-	void quit();
 	void initOrderVector();
 	vector<string> infoVec;//this vector stores all information 
 };
