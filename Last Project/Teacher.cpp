@@ -7,7 +7,7 @@ Teacher::Teacher()
 {
 
 }
-Teacher::Teacher(string id, string name,string pwd)
+Teacher::Teacher(string id, string name, string pwd)
 {
 	this->m_ID = id;
 	this->m_Name = name;
@@ -28,8 +28,16 @@ void Teacher::approve()
 	int cnt = 0;
 	for (const auto& c : infoVec)
 	{
-		++cnt;
-		cout << cnt << ".\t" << c << endl;
+		auto idx_Status = c.rfind("Status:");
+		auto status_string = c.substr(idx_Status + string("Status: ").size(), c.size());
+		//++cnt;
+		//cout << cnt << ".\t" << c << endl;
+
+		if (status_string == "review")
+		{
+			++cnt;
+			cout << cnt << ".\t" << c << endl;
+		}
 	}
 
 
@@ -41,7 +49,7 @@ void Teacher::approve()
 	{
 		++cnt;
 		auto idx_Status = c.rfind("Status: ");
-		if (cnt==choice)
+		if (cnt == choice)
 		{
 			cout << "approve or deny?" << endl;
 			cout << "1.\tapprove" << endl;
@@ -50,7 +58,7 @@ void Teacher::approve()
 			cin >> decision;
 			while (true)
 			{
-				if (decision == 1 ||decision == 2)
+				if (decision == 1 || decision == 2)
 				{
 					break;
 				}
