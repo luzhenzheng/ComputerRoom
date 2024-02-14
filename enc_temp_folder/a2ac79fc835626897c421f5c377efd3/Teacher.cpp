@@ -24,15 +24,7 @@ void Teacher::showAllOrders()
 }
 void Teacher::approve()
 {
-	//show only the orders in review
-	int cnt = 0;
-	for (const auto& c : infoVec)
-	{
-		++cnt;
-		cout << cnt << ".\t" << c << endl;
-	}
-
-
+	this->showAllOrders();
 	int choice;
 	cout << "which order do you want to review?" << endl;
 	cin >> choice;
