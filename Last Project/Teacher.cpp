@@ -38,9 +38,14 @@ void Teacher::approve()
 	}
 
 	int choice;
-	cout << "which order do you want to review?" << endl;
+	cout << "which order do you want to review? 0 for quit" << endl;
 	cin >> choice;
 	cnt = 0;
+
+	if (choice == 0)
+	{
+		return;
+	}
 	for (auto& c : infoVec)
 	{
 
